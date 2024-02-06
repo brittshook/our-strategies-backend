@@ -28,19 +28,21 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const { firstName, lastName, email, address, role } = req.body;
+      const { first, last, email, address, role } = req.body;
 
-      if (!firstName || !lastName || !email || !address) {
+      if (!first || !last || !email || !address) {
         throw error(400, "Insufficient data");
       }
 
-      if (role && !["admin", "user", "owner"].includes(role)) {
+      const allowedRoles = ["owner", "admin", "volunteer"];
+
+      if (role && role.some((role) => !allowedRoles.includes(role))) {
         throw error(400, "Invalid role");
       }
 
       const result = await User.create({
-        firstName,
-        lastName,
+        first,
+        last,
         email,
         address,
         role,
