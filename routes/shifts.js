@@ -67,61 +67,71 @@ router
     }
   });
 
-// router
-//   .route("/shifts/:shiftId/?")
-//   .get((req, res, next) => {
-//     const shiftId = req.params.shiftId;
-//     const shift = shifts.find((shift) => shift.id == shiftId);
+router
+  .route("/shifts/:id/?")
+  .get(async (req, res, next) => {
+    try {
+      const shiftId = req.params.id;
 
-//     if (shift) {
-//       res.json({ shift: shift });
-//     } else next(error(404, "Shift not found"));
-//   })
-//   .put((req, res, next) => {
-//     const shiftId = req.params.shiftId;
-//     const existingShift = shifts.find((shift) => shift.id == shiftId);
+      if (!shiftId) {
+        throw error(400, "Insufficient data");
+      }
 
-//     if (existingShift) {
-//       const name = req.body.name;
-//       const program = req.body.program;
-//       const startTime = req.body.startTime;
-//       const endTime = req.body.endTime;
-//       const location = req.body.location;
-//       const volunteerLimit = req.body.volunteerLimit;
+      const result = await Shift.findById(shiftId);
 
-//       if (
-//         name &&
-//         program &&
-//         startTime &&
-//         endTime &&
-//         location &&
-//         volunteerLimit
-//       ) {
-//         const shift = {
-//           name: name,
-//           program: program,
-//           startTime: startTime,
-//           endTime: endTime,
-//           location: location,
-//           volunteerLimit: volunteerLimit,
-//         };
+      if (result) {
+        res.json({ shift: result });
+      } else {
+        throw error(404, "Shift not found");
+      }
+    } catch (err) {
+      next(err);
+    }
+  })
+  .patch(async (req, res, next) => {
+    try {
+      const shiftId = req.params.id;
+      const body = req.body;
 
-//         shifts.shiftId = shift;
+      if (!shiftId || !body) {
+        throw error(400, "Insufficient data");
+      }
 
-//         res.json({ shift: shift });
-//       } else {
-//         next(error(400, "Insufficient data"));
-//       }
-//     } else {
-//       next(error(404, "Shift not found"));
-//     }
-//   })
-//   .delete((req, res, next) => {
-//     const id =
+      const shift = await Shift.findById(shiftId);
+      if (!shift) {
+        throw error(404, "Shift not found");
+      }
 
-//     if () {
+      let result;
+      for (const key in body) {
+        result = await Shift.findByIdAndUpdate(shiftId, {
+          $set: { [key]: body[key] },
+        });
+      }
 
-//     } else {
-//       next(error(404, "Shift not found"));
-//     }
-//   });
+      res.json({ shift: result });
+    } catch (err) {
+      next(err);
+    }
+  })
+  .delete(async (req, res, next) => {
+    try {
+      const shiftId = req.params.id;
+
+      if (!shiftId) {
+        throw error(400, "Insufficient data");
+      }
+
+      const result = await Shift.findByIdAndDelete(shiftId);
+
+      if (result) {
+        res.status(204);
+      } else {
+        throw error(404, "Shift not found");
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+module.exports = router;
