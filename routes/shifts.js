@@ -6,7 +6,7 @@ const error = require("../utils/error.js");
 const router = express.Router();
 
 router
-  .route("/shifts/?")
+  .route("/?")
   .get(async (req, res, next) => {
     try {
       const { startTime, endTime } = req.query;
@@ -68,7 +68,7 @@ router
   });
 
 router
-  .route("/shifts/:id/?")
+  .route("/:id/?")
   .get(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
@@ -135,7 +135,7 @@ router
   });
 
 router
-  .get("/shifts/:id/users/?", async (req, res, next) => {
+  .get("/:id/users/?", async (req, res, next) => {
     try {
       const shiftId = req.params.id;
 
@@ -188,7 +188,7 @@ router
     }
   });
 
-router.delete("/shifts/:id/users/:userId/?", async (req, res, next) => {
+router.delete("/:id/users/:userId/?", async (req, res, next) => {
   try {
     const shiftId = req.params.id;
     const userId = req.params.shiftId;

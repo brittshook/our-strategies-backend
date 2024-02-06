@@ -7,7 +7,7 @@ const error = require("../utils/error.js");
 const router = express.Router();
 
 router
-  .route("/")
+  .route("/?")
   .get(async (req, res, next) => {
     try {
       const { status, role } = req.query;

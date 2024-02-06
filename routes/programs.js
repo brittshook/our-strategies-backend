@@ -5,7 +5,7 @@ const error = require("../utils/error.js");
 const router = express.Router();
 
 router
-  .route("/programs/?")
+  .route("/?")
   .get(async (req, res, next) => {
     try {
       const active = req.query.active;
@@ -42,7 +42,7 @@ router
   });
 
 router
-  .route("/programs/:id/?")
+  .route("/:id/?")
   .patch(async (req, res, next) => {
     try {
       const programId = req.params.id;
