@@ -145,7 +145,7 @@ router
         .limit(1000);
 
       if (result) {
-        res.json({ shifts: shiftAssignments });
+        res.json({ shifts: result });
       } else {
         throw error(400, "User not found");
       }
