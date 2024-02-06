@@ -1,4 +1,4 @@
-const error = (message, statusCode = 500) => {
+const error = (statusCode, message) => {
   const error = new Error(message);
   error.statusCode = statusCode;
   return error;
