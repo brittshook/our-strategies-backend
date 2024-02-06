@@ -134,4 +134,79 @@ router
     }
   });
 
+router
+  .get("/shifts/:id/users/?", async (req, res, next) => {
+    try {
+      const shiftId = req.params.id;
+
+      if (!shiftId) {
+        throw error(400, "Insufficient data");
+      }
+
+      const { startTime, endTime } = req.query;
+      const query = { shiftId };
+
+      if (startTime) {
+        query.startTime = { $gte: startTime };
+      }
+
+      if (endTime) {
+        query.endTime = { $lte: endTime };
+      }
+
+      const result = await ShiftAssignment.find(query)
+        .populate("userId")
+        .limit(1000);
+
+      if (result) {
+        res.json({ shifts: result });
+      } else {
+        throw error(400, "Shift not found");
+      }
+    } catch (err) {
+      next(err);
+    }
+  })
+  .post(async (req, res, next) => {
+    try {
+      const shiftId = req.params.id;
+      const userId = req.body.userId;
+
+      if (!shiftId || !userId) {
+        throw error(400, "Insufficient data");
+      }
+
+      const result = await ShiftAssignment.create({ userId, shiftId });
+
+      if (result) {
+        res.status(201).json({ shiftAssignment: result });
+      } else {
+        throw error(404, "User not found");
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+router.delete("/shifts/:id/users/:userId/?", async (req, res, next) => {
+  try {
+    const shiftId = req.params.id;
+    const userId = req.params.shiftId;
+
+    if (!shiftId || !userId) {
+      throw error(400, "Insufficient data");
+    }
+
+    const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
+
+    if (result) {
+      res.status(204);
+    } else {
+      throw error(404, "User not found");
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
