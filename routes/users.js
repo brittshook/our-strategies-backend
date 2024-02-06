@@ -31,11 +31,11 @@ router
       const { first, last, email, address, role } = req.body;
 
       if (!first || !last || !email || !address) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       if (role && !["admin", "user", "owner"].includes(role)) {
-        next(error(400, "Invalid role"));
+        throw error(400, "Invalid role");
       }
 
       const result = await User.create({
@@ -59,7 +59,7 @@ router
       const userId = req.params.id;
 
       if (!userId) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       const result = await User.findById(userId);
@@ -67,7 +67,7 @@ router
       if (result) {
         res.json({ user: result });
       } else {
-        next(error(404, "User not found"));
+        throw error(404, "User not found");
       }
     } catch (err) {
       next(err);
@@ -79,7 +79,7 @@ router
       const body = req.body;
 
       if (!userId || !body) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       const user = await User.findById(userId);
@@ -104,7 +104,7 @@ router
       const userId = req.params.id;
 
       if (!userId) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       const result = await User.findByIdAndDelete(userId);
@@ -112,7 +112,7 @@ router
       if (result) {
         res.status(204);
       } else {
-        next(error(404, "User not found"));
+        throw error(404, "User not found");
       }
     } catch (err) {
       next(err);
@@ -126,7 +126,7 @@ router
       const userId = req.params.id;
 
       if (!userId) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       const { startTime, endTime } = req.query;
@@ -147,7 +147,7 @@ router
       if (result) {
         res.json({ shifts: shiftAssignments });
       } else {
-        next(error(400, "User not found"));
+        throw error(400, "User not found");
       }
     } catch (err) {
       next(err);
@@ -159,7 +159,7 @@ router
       const shiftId = req.body.shiftId;
 
       if (!userId || !shiftId) {
-        next(error(400, "Insufficient data"));
+        throw error(400, "Insufficient data");
       }
 
       const result = await ShiftAssignment.create({ userId, shiftId });
@@ -167,7 +167,7 @@ router
       if (result) {
         res.status(201).json({ shiftAssignment: result });
       } else {
-        next(error(404, "Shift not found"));
+        throw error(404, "Shift not found");
       }
     } catch (err) {
       next(err);
@@ -179,7 +179,7 @@ router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
   const shiftId = req.params.shiftId;
 
   if (!userId || !shiftId) {
-    next(error(400, "Insufficient data"));
+    throw error(400, "Insufficient data");
   }
 
   const result = await ShiftAssignment.find({ userId, shiftId });
@@ -187,7 +187,7 @@ router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
   if (result) {
     res.status(204);
   } else {
-    next(error(404, "Shift not found"));
+    throw error(404, "Shift not found");
   }
 });
 

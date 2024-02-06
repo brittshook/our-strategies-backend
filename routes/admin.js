@@ -10,7 +10,7 @@ router.patch("/approve/:id/?", async (req, res, next) => {
     const isApproved = req.body.approved;
 
     if (!userId || isApproved === undefined) {
-      next(error(400, "Insufficient data"));
+      throw error(400, "Insufficient data");
     }
 
     const status = isApproved ? "approved" : "denied";
@@ -19,7 +19,7 @@ router.patch("/approve/:id/?", async (req, res, next) => {
     if (result) {
       res.json({ user: result });
     } else {
-      next(error(404, "User not found"));
+      throw error(404, "User not found");
     }
   } catch (err) {
     next(err);
