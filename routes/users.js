@@ -175,19 +175,23 @@ router
   });
 
 router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
-  const userId = req.params.id;
-  const shiftId = req.params.shiftId;
+  try {
+    const userId = req.params.id;
+    const shiftId = req.params.shiftId;
 
-  if (!userId || !shiftId) {
-    throw error(400, "Insufficient data");
-  }
+    if (!userId || !shiftId) {
+      throw error(400, "Insufficient data");
+    }
 
-  const result = await ShiftAssignment.find({ userId, shiftId });
+    const result = await ShiftAssignment.find({ userId, shiftId });
 
-  if (result) {
-    res.status(204);
-  } else {
-    throw error(404, "Shift not found");
+    if (result) {
+      res.status(204);
+    } else {
+      throw error(404, "Shift not found");
+    }
+  } catch (err) {
+    next(err);
   }
 });
 
