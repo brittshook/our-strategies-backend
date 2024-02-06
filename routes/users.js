@@ -183,7 +183,7 @@ router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
       throw error(400, "Insufficient data");
     }
 
-    const result = await ShiftAssignment.find({ userId, shiftId });
+    const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 
     if (result) {
       res.status(204);
