@@ -41,24 +41,56 @@ router
     }
   });
 
-router.delete("/programs/:id/?", async (req, res, next) => {
-  try {
-    const programId = req.params.id;
+router
+  .route("/programs/:id/?")
+  .patch(async (req, res, next) => {
+    try {
+      const programId = req.params.id;
+      const body = req.body;
 
-    if (!programId) {
-      throw error(400, "Insufficient data");
+      if (!programId) {
+        throw error(400, "Insufficient data");
+      }
+
+      const program = await Program.findById(programId);
+      if (!program) {
+        throw error(404, "Program not found");
+      }
+
+      let result;
+      for (const key in body) {
+        result = await Program.findByIdAndUpdate(programId, {
+          $set: { [key]: body[key] },
+        });
+      }
+
+      if (result) {
+        res.json({ program: result });
+      } else {
+        throw error(400, "Bad request");
+      }
+    } catch (err) {
+      next(err);
     }
+  })
+  .delete(async (req, res, next) => {
+    try {
+      const programId = req.params.id;
 
-    const result = await Program.findByIdAndDelete(programId);
+      if (!programId) {
+        throw error(400, "Insufficient data");
+      }
 
-    if (result) {
-      res.status(204);
-    } else {
-      throw error(404, "Program not found");
+      const result = await Program.findByIdAndDelete(programId);
+
+      if (result) {
+        res.status(204);
+      } else {
+        throw error(404, "Program not found");
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
-  }
-});
+  });
 
 module.exports = router;
