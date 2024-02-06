@@ -28,9 +28,9 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const { first, last, email, address, role } = req.body;
+      const { firstName, lastName, email, address, role } = req.body;
 
-      if (!first || !last || !email || !address) {
+      if (!firstName || !lastName || !email || !address) {
         throw error(400, "Insufficient data");
       }
 
@@ -39,8 +39,8 @@ router
       }
 
       const result = await User.create({
-        firstName: first,
-        lastName: last,
+        firstName,
+        lastName,
         email,
         address,
         role,
