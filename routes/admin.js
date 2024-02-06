@@ -7,13 +7,13 @@ const router = express.Router();
 router.patch("/approve/:id/?", async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const isApproved = req.body.approved;
+    const approved = req.body.approved;
 
-    if (!userId || isApproved === undefined) {
+    if (!userId || approved === undefined) {
       throw error(400, "Insufficient data");
     }
 
-    const status = isApproved ? "approved" : "denied";
+    const status = approved ? "approved" : "denied";
     const result = await User.findByIdAndUpdate(userId, { $set: { status } });
 
     if (result) {
