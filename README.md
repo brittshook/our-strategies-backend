@@ -23,7 +23,7 @@ To install and set up the project locally, follow these steps:
 2. Navigate to the project directory:
 
    ```bash
-   $ cd volunteer-management-backend
+   $ cd our-strategies-backend
    ```
 
 3. Install dependencies:
