@@ -75,7 +75,7 @@ router
       const result = await Program.findByIdAndDelete(programId);
 
       if (result) {
-        res.status(204);
+        res.status(204).json();
       } else {
         throw error(404, "Program not found");
       }

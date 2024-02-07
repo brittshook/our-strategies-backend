@@ -115,7 +115,7 @@ router
       const result = await Shift.findByIdAndDelete(shiftId);
 
       if (result) {
-        res.status(204);
+        res.status(204).json();
       } else {
         throw error(404, "Shift not found");
       }
@@ -185,7 +185,7 @@ router.delete("/:id/users/:userId/?", async (req, res, next) => {
     const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 
     if (result) {
-      res.status(204);
+      res.status(204).json();
     } else {
       throw error(404, "User not found");
     }

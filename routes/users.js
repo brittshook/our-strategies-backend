@@ -83,14 +83,13 @@ router
         throw error(404, "User not found");
       }
 
-      let result;
       for (const key in body) {
-        result = await User.findByIdAndUpdate(userId, {
+        await User.findByIdAndUpdate(userId, {
           $set: { [key]: body[key] },
         });
       }
 
-      res.json({ user: result });
+      res.json({ user: await User.findById(userId) });
     } catch (err) {
       next(err);
     }
@@ -101,7 +100,7 @@ router
       const result = await User.findByIdAndDelete(userId);
 
       if (result) {
-        res.status(204);
+        res.status(204).json();
       } else {
         throw error(404, "User not found");
       }
@@ -169,7 +168,7 @@ router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
     const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 
     if (result) {
-      res.status(204);
+      res.status(204).json();
     } else {
       throw error(404, "Shift not found");
     }
