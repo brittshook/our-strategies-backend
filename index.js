@@ -27,8 +27,13 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({ error: err.message });
+  if (!err.statusCode) {
+    err.statusCode = 500;
+  }
+  if (err.statusCode >= 500) {
+    err.message = "Internal server error";
+  }
+  res.status(err.statusCode).json({ error: err.message });
 });
 
 app.listen(port, () => console.log(`Server is listening on port: ${port}`));
