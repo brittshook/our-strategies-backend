@@ -54,7 +54,7 @@ The backend requires configuration for database setup and environment variables 
 - MongoDB password (DB_PASSWORD)
 - MongoDB database (DB_DATABASE)
 - MongoDB hostname (DB_HOST)
-- Port
+- Port (PORT)
 
 ## Next Steps
 
