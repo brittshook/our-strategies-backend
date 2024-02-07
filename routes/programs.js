@@ -8,7 +8,7 @@ router
   .route("/?")
   .get(async (req, res, next) => {
     try {
-      const active = req.query.active;
+      const active = Boolean(req.query.active);
       let query = {};
 
       if (active !== undefined) {
@@ -23,13 +23,13 @@ router
   .post(async (req, res, next) => {
     try {
       const { name, active } = req.body;
-
+      active = Boolean(active)
+      
       if (!name) {
         throw error(400, "Insufficient data");
       }
 
       const existingProgram = await Program.findOne({ name });
-
       if (existingProgram) {
         throw error(409, "Program already exists");
       }
@@ -47,10 +47,6 @@ router
     try {
       const programId = req.params.id;
       const body = req.body;
-
-      if (!programId) {
-        throw error(400, "Insufficient data");
-      }
 
       const program = await Program.findById(programId);
       if (!program) {
@@ -76,11 +72,6 @@ router
   .delete(async (req, res, next) => {
     try {
       const programId = req.params.id;
-
-      if (!programId) {
-        throw error(400, "Insufficient data");
-      }
-
       const result = await Program.findByIdAndDelete(programId);
 
       if (result) {
