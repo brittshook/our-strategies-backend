@@ -133,7 +133,7 @@ router
       if (result) {
         res.json({ shifts: result });
       } else {
-        throw error(400, "User not found");
+        throw error(400, "Bad request");
       }
     } catch (err) {
       next(err);
@@ -148,12 +148,22 @@ router
         throw error(400, "Insufficient data");
       }
 
+      const existingShift = await ShiftAssignment.findOne({ userId, shiftId });
+      if (existingShift) {
+        throw error(409, "Shift assignment already exists");
+      }
+
       const result = await ShiftAssignment.create({ userId, shiftId });
 
       if (result) {
-        res.status(201).json({ shiftAssignment: result });
+        res.status(201).json({
+          shiftAssignment: await ShiftAssignment.find({
+            userId,
+            shiftId,
+          }).populate("shiftId"),
+        });
       } else {
-        throw error(404, "Shift not found");
+        throw error(400, "Bad request");
       }
     } catch (err) {
       next(err);
@@ -170,7 +180,7 @@ router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
     if (result) {
       res.status(204).json();
     } else {
-      throw error(404, "Shift not found");
+      throw error(404, "Shift assignment not found");
     }
   } catch (err) {
     next(err);
