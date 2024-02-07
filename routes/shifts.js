@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Shift = require("../models/shift.js");
 const ShiftAssignment = require("../models/shiftAssignment.js");
 const error = require("../utils/error.js");
@@ -29,6 +30,11 @@ router
     try {
       let { name, programId, startTime, endTime, location, volunteerLimit } =
         req.body;
+
+      if (!mongoose.Types.ObjectId.isValid(programId)) {
+        throw error(400, "Invalid program ID");
+      }
+
       if (!location.hasOwnProperty("type")) {
         location.type = "Point";
       }
@@ -75,6 +81,11 @@ router
   .get(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+        throw error(400, "Invalid shift ID");
+      }
+
       const result = await Shift.findById(shiftId);
 
       if (result) {
@@ -131,6 +142,11 @@ router
   .get(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+        throw error(400, "Invalid shift ID");
+      }
+
       const { startTime, endTime } = req.query;
       const query = { shiftId };
 
@@ -149,7 +165,7 @@ router
       if (result) {
         res.json({ shiftAssignment: result });
       } else {
-        throw error(400, "Shift assignments not found");
+        throw error(400, "Bad request");
       }
     } catch (err) {
       next(err);
@@ -158,10 +174,17 @@ router
   .post(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+        throw error(400, "Invalid shift ID");
+      }
+
       const userId = req.body.userId;
 
       if (!userId) {
         throw error(400, "Insufficient data");
+      } else if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
       }
 
       const existingShift = await ShiftAssignment.findOne({ userId, shiftId });
@@ -179,7 +202,7 @@ router
           }).populate("userId"),
         });
       } else {
-        throw error(404, "Shift assignment not found");
+        throw error(400, "Bad request");
       }
     } catch (err) {
       next(err);
@@ -189,7 +212,16 @@ router
 router.delete("/:id/users/:userId/?", async (req, res, next) => {
   try {
     const shiftId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+      throw error(400, "Invalid user ID");
+    }
+
     const userId = req.params.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw error(400, "Invalid user ID");
+    }
 
     const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 

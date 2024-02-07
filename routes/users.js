@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const User = require("../models/user.js");
 const ShiftAssignment = require("../models/shiftAssignment.js");
 const error = require("../utils/error.js");
@@ -58,6 +59,11 @@ router
   .get(async (req, res, next) => {
     try {
       const userId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
+      }
+
       const result = await User.findById(userId);
 
       if (result) {
@@ -72,6 +78,11 @@ router
   .patch(async (req, res, next) => {
     try {
       const userId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
+      }
+
       const body = req.body;
 
       if (!body || !Object.keys(body).length) {
@@ -97,6 +108,11 @@ router
   .delete(async (req, res, next) => {
     try {
       const userId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
+      }
+
       const result = await User.findByIdAndDelete(userId);
 
       if (result) {
@@ -114,6 +130,10 @@ router
   .get(async (req, res, next) => {
     try {
       const userId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
+      }
 
       const { startTime, endTime } = req.query;
       const query = { userId };
@@ -142,10 +162,17 @@ router
   .post(async (req, res, next) => {
     try {
       const userId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw error(400, "Invalid user ID");
+      }
+
       const shiftId = req.body.shiftId;
 
       if (!shiftId) {
         throw error(400, "Insufficient data");
+      } else if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+        throw error(400, "Invalid shift ID");
       }
 
       const existingShift = await ShiftAssignment.findOne({ userId, shiftId });
@@ -173,7 +200,16 @@ router
 router.delete("/:id/shifts/:shiftId/?", async (req, res, next) => {
   try {
     const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw error(400, "Invalid user ID");
+    }
+
     const shiftId = req.params.shiftId;
+
+    if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+      throw error(400, "Invalid shift ID");
+    }
 
     const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 

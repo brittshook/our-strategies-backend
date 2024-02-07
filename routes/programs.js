@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Program = require("../models/program.js");
 const error = require("../utils/error.js");
 
@@ -50,8 +51,12 @@ router
   .patch(async (req, res, next) => {
     try {
       const programId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(programId)) {
+        throw error(400, "Invalid program ID");
+      }
+
       const body = req.body;
-      console.log(body);
 
       if (!body || !Object.keys(body).length) {
         throw error(400, "Insufficient data");
@@ -76,6 +81,11 @@ router
   .delete(async (req, res, next) => {
     try {
       const programId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(programId)) {
+        throw error(400, "Invalid program ID");
+      }
+
       const result = await Program.findByIdAndDelete(programId);
 
       if (result) {
