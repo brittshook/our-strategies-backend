@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const model = mongoose.model;
 
 const ShiftAssignment = model(
-  "ShiftAssignment",
+  "Shift_Assignment",
   new Schema(
     {
       userId: {
