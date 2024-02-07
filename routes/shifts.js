@@ -97,9 +97,8 @@ router
         throw error(404, "Shift not found");
       }
 
-      let result;
       for (const key in body) {
-        result = await Shift.findByIdAndUpdate(shiftId, {
+        await Shift.findByIdAndUpdate(shiftId, {
           $set: { [key]: body[key] },
         });
       }

@@ -8,10 +8,11 @@ router
   .route("/?")
   .get(async (req, res, next) => {
     try {
-      const active = Boolean(req.query.active);
+      let active = req.query.active;
       let query = {};
 
       if (active !== undefined) {
+        active = Boolean(active);
         query.active = active;
       }
 
@@ -22,9 +23,12 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const { name, active } = req.body;
-      active = Boolean(active)
-      
+      let { name, active } = req.body;
+
+      if (active !== undefined) {
+        active = Boolean(active);
+      }
+
       if (!name) {
         throw error(400, "Insufficient data");
       }
@@ -53,18 +57,13 @@ router
         throw error(404, "Program not found");
       }
 
-      let result;
       for (const key in body) {
         result = await Program.findByIdAndUpdate(programId, {
           $set: { [key]: body[key] },
         });
       }
 
-      if (result) {
-        res.json({ program: result });
-      } else {
-        throw error(400, "Bad request");
-      }
+      res.json({ program: await Program.findById(programId) });
     } catch (err) {
       next(err);
     }
