@@ -127,7 +127,8 @@ router
   });
 
 router
-  .get("/:id/users/?", async (req, res, next) => {
+  .route("/:id/users/?")
+  .get(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
       const { startTime, endTime } = req.query;
@@ -146,9 +147,9 @@ router
         .limit(1000);
 
       if (result) {
-        res.json({ shifts: result });
+        res.json({ shiftAssignment: result });
       } else {
-        throw error(400, "Shift not found");
+        throw error(400, "Shift assignments not found");
       }
     } catch (err) {
       next(err);
@@ -163,12 +164,22 @@ router
         throw error(400, "Insufficient data");
       }
 
+      const existingShift = await ShiftAssignment.findOne({ userId, shiftId });
+      if (existingShift) {
+        throw error(409, "Shift assignment already exists");
+      }
+
       const result = await ShiftAssignment.create({ userId, shiftId });
 
       if (result) {
-        res.status(201).json({ shiftAssignment: result });
+        res.status(201).json({
+          shiftAssignment: await ShiftAssignment.find({
+            userId,
+            shiftId,
+          }).populate("userId"),
+        });
       } else {
-        throw error(404, "User not found");
+        throw error(404, "Shift assignment not found");
       }
     } catch (err) {
       next(err);
@@ -178,18 +189,14 @@ router
 router.delete("/:id/users/:userId/?", async (req, res, next) => {
   try {
     const shiftId = req.params.id;
-    const userId = req.params.shiftId;
-
-    if (!userId) {
-      throw error(400, "Insufficient data");
-    }
+    const userId = req.params.userId;
 
     const result = await ShiftAssignment.findOneAndDelete({ userId, shiftId });
 
     if (result) {
       res.status(204).json();
     } else {
-      throw error(404, "User not found");
+      throw error(404, "Shift assignment not found");
     }
   } catch (err) {
     next(err);
