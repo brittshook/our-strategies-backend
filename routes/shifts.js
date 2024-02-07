@@ -27,8 +27,11 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const { name, programId, startTime, endTime, location, volunteerLimit } =
+      let { name, programId, startTime, endTime, location, volunteerLimit } =
         req.body;
+      if (!location.hasOwnProperty("type")) {
+        location.type = "Point";
+      }
 
       if (
         !name ||
