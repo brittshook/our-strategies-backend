@@ -48,6 +48,25 @@ router
 
 router
   .route("/:id/?")
+  .get(async (req, res, next) => {
+    try {
+      const programId = req.params.id;
+
+      if (!mongoose.Types.ObjectId.isValid(programId)) {
+        throw error(400, "Invalid program ID");
+      }
+
+      const result = await Program.findById(programId);
+
+      if (result) {
+        res.json({ program: result });
+      } else {
+        throw error(404, "Program not found");
+      }
+    } catch (err) {
+      next(err);
+    }
+  })
   .patch(async (req, res, next) => {
     try {
       const programId = req.params.id;
