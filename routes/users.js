@@ -153,7 +153,7 @@ router
       if (result) {
         res.json({ shifts: result });
       } else {
-        throw error(400, "Bad request");
+        throw error(404, "User not found");
       }
     } catch (err) {
       next(err);
@@ -190,7 +190,7 @@ router
           }).populate("shiftId"),
         });
       } else {
-        throw error(400, "Bad request");
+        throw error(404, "User or shift not found");
       }
     } catch (err) {
       next(err);
