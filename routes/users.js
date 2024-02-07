@@ -1,6 +1,5 @@
 const express = require("express");
 const User = require("../models/user.js");
-const Shift = require("../models/shift.js");
 const ShiftAssignment = require("../models/shiftAssignment.js");
 const error = require("../utils/error.js");
 
