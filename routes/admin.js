@@ -23,7 +23,7 @@ router.patch("/approve/:id/?", async (req, res, next) => {
     const result = await User.findByIdAndUpdate(userId, { $set: { status } });
 
     if (result) {
-      res.json({ user: result });
+      res.json({ user: await User.findById(userId) });
     } else {
       throw error(404, "User not found");
     }
