@@ -13,13 +13,13 @@ router.patch("/approve/:id/?", async (req, res, next) => {
       throw error(400, "Invalid user ID");
     }
 
-    const approved = Boolean(req.body.approved);
+    const approve = Boolean(req.body.approve);
 
-    if (approved === undefined) {
+    if (approve === undefined) {
       throw error(400, "Insufficient data");
     }
 
-    const status = approved ? "approved" : "denied";
+    const status = approve ? "approved" : "denied";
     const result = await User.findByIdAndUpdate(userId, { $set: { status } });
 
     if (result) {
