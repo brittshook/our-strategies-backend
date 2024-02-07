@@ -51,6 +51,11 @@ router
     try {
       const programId = req.params.id;
       const body = req.body;
+      console.log(body);
+
+      if (!body || !Object.keys(body).length) {
+        throw error(400, "Insufficient data");
+      }
 
       const program = await Program.findById(programId);
       if (!program) {

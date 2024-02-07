@@ -88,7 +88,7 @@ router
       const shiftId = req.params.id;
       const body = req.body;
 
-      if (!body) {
+      if (!body || !Object.keys(body).length) {
         throw error(400, "Insufficient data");
       }
 
