@@ -31,6 +31,7 @@ app.use((err, req, res, next) => {
     err.statusCode = 500;
   }
   if (err.statusCode >= 500) {
+    console.log(err);
     err.message = "Internal server error";
   }
   res.status(err.statusCode).json({ error: err.message });
