@@ -1,6 +1,6 @@
 # Volunteer Management System Backend
 
-This backend for a full-stack application to streamline volunteer management processes for a community building organization. It is designed to manage volunteers and shifts for various programs. It provides APIs for creating, updating, and retrieving volunteers, shifts, and programs.
+This is a backend for a full-stack application to streamline volunteer management processes for a community building organization. It is designed to manage volunteers and shifts for various programs. It provides APIs for creating, updating, and retrieving volunteers, shifts, and programs.
 
 ## Table of Contents
 
