@@ -106,7 +106,7 @@ router
         });
       }
 
-      res.json({ shift: result });
+      res.json({ shift: await Shift.findById(shiftId) });
     } catch (err) {
       next(err);
     }
