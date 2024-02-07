@@ -7,7 +7,7 @@ const Shift = model(
   new Schema(
     {
       name: String,
-      program: {
+      programId: {
         type: Schema.Types.ObjectId,
         ref: "Program",
       },
