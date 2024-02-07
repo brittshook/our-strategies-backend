@@ -43,6 +43,7 @@ const shiftSchema = new Schema(
 );
 
 shiftSchema.index({ location: "2dsphere" });
+shiftSchema.index({ startTime: 1 });
 
 const Shift = model("Shift", shiftSchema);
 
