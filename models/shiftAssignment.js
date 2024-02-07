@@ -9,10 +9,12 @@ const ShiftAssignment = model(
       userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: true,
       },
       shiftId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Shift",
+        required: true,
       },
     },
     { timestamps: true }

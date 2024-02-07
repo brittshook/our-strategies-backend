@@ -6,7 +6,7 @@ const Program = model(
   "Program",
   new Schema(
     {
-      name: String,
+      name: { type: String, required: true },
       active: { type: Boolean, default: true },
     },
     { timestamps: true }
