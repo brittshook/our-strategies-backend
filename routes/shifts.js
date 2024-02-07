@@ -72,11 +72,6 @@ router
   .get(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
-
-      if (!shiftId) {
-        throw error(400, "Insufficient data");
-      }
-
       const result = await Shift.findById(shiftId);
 
       if (result) {
@@ -93,7 +88,7 @@ router
       const shiftId = req.params.id;
       const body = req.body;
 
-      if (!shiftId || !body) {
+      if (!body) {
         throw error(400, "Insufficient data");
       }
 
@@ -117,11 +112,6 @@ router
   .delete(async (req, res, next) => {
     try {
       const shiftId = req.params.id;
-
-      if (!shiftId) {
-        throw error(400, "Insufficient data");
-      }
-
       const result = await Shift.findByIdAndDelete(shiftId);
 
       if (result) {
@@ -138,11 +128,6 @@ router
   .get("/:id/users/?", async (req, res, next) => {
     try {
       const shiftId = req.params.id;
-
-      if (!shiftId) {
-        throw error(400, "Insufficient data");
-      }
-
       const { startTime, endTime } = req.query;
       const query = { shiftId };
 
@@ -172,7 +157,7 @@ router
       const shiftId = req.params.id;
       const userId = req.body.userId;
 
-      if (!shiftId || !userId) {
+      if (!userId) {
         throw error(400, "Insufficient data");
       }
 
@@ -193,7 +178,7 @@ router.delete("/:id/users/:userId/?", async (req, res, next) => {
     const shiftId = req.params.id;
     const userId = req.params.shiftId;
 
-    if (!shiftId || !userId) {
+    if (!userId) {
       throw error(400, "Insufficient data");
     }
 
