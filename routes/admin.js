@@ -7,9 +7,9 @@ const router = express.Router();
 router.patch("/approve/:id/?", async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const approved = req.body.approved;
+    const approved = Boolean(req.body.approved);
 
-    if (!userId || approved === undefined) {
+    if (approved === undefined) {
       throw error(400, "Insufficient data");
     }
 
