@@ -10,7 +10,7 @@ router
   .route("/?")
   .get(async (req, res, next) => {
     try {
-      const { status, role } = req.query;
+      const { status, role, email } = req.query;
       let query = {};
 
       if (status) {
@@ -19,6 +19,10 @@ router
 
       if (role) {
         query.role = role;
+      }
+
+      if (email) {
+        query.email = email;
       }
 
       res.json({ users: await User.find(query).limit(1000) });
@@ -36,6 +40,10 @@ router
 
       const allowedRoles = ["owner", "admin", "volunteer"];
 
+      if (!Array.isArray(role)) {
+        throw error(400, "Role must be array");
+      }
+
       if (role && role.some((role) => !allowedRoles.includes(role))) {
         throw error(400, "Invalid role");
       }
@@ -45,6 +53,7 @@ router
         last,
         email,
         address,
+        profileImageId,
         role,
       });
 
@@ -75,7 +84,7 @@ router
       next(err);
     }
   })
-  .patch(async (req, res, next) => {
+  .put(async (req, res, next) => {
     try {
       const userId = req.params.id;
 
@@ -83,10 +92,29 @@ router
         throw error(400, "Invalid user ID");
       }
 
-      const body = req.body;
+      const { first, last, email, address, role, status, profileImageId } =
+        req.body;
 
-      if (!body || !Object.keys(body).length) {
+      if (
+        !first &&
+        !last &&
+        !email &&
+        !address &&
+        !profileImageId &&
+        !role &&
+        !status
+      ) {
         throw error(400, "Insufficient data");
+      }
+
+      const allowedRoles = ["owner", "admin", "volunteer"];
+
+      if (!Array.isArray(role)) {
+        throw error(400, "Role must be array");
+      }
+
+      if (role && role.some((role) => !allowedRoles.includes(role))) {
+        throw error(400, "Invalid role");
       }
 
       const user = await User.findById(userId);
@@ -94,11 +122,10 @@ router
         throw error(404, "User not found");
       }
 
-      for (const key in body) {
-        await User.findByIdAndUpdate(userId, {
-          $set: { [key]: body[key] },
-        });
-      }
+      await User.findOneAndReplace(
+        { _id: userId },
+        { first, last, email, address, profileImageId, role, status }
+      );
 
       res.json({ user: await User.findById(userId) });
     } catch (err) {
