@@ -11,7 +11,7 @@ const userSchema = new Schema(
     profileImageId: {
       type: Schema.Types.ObjectId,
       ref: "ProfileImage",
-      default: "65d77616fc9d9a2308bad38e",
+      default: "65d78482702ea028467109eb",
     },
     role: {
       type: [
