@@ -10,11 +10,16 @@ router
   .get(async (req, res, next) => {
     try {
       let active = req.query.active;
+      let name = req.query.name;
       let query = {};
 
       if (active !== undefined) {
         active = Boolean(active);
         query.active = active;
+      }
+
+      if (name) {
+        query.name = name;
       }
 
       res.json({ programs: await Program.find(query).limit(1000) });
