@@ -7,6 +7,8 @@ const users = require("./routes/users.js");
 const admin = require("./routes/admin.js");
 const shifts = require("./routes/shifts.js");
 const programs = require("./routes/programs.js");
+const map = require("./routes/map.js");
+const profileImage = require("./routes/profileImage.js");
 
 const error = require("./utils/error");
 
@@ -21,6 +23,8 @@ app.use("/api/users", users);
 app.use("/api/admin", admin);
 app.use("/api/shifts", shifts);
 app.use("/api/programs", programs);
+app.use("/api/map", map);
+app.use("/api/profileImage", profileImage);
 
 app.use((req, res, next) => {
   next(error(404, "Resource not found"));
