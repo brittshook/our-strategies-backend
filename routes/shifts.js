@@ -10,7 +10,7 @@ router
   .route("/?")
   .get(async (req, res, next) => {
     try {
-      const { startTime, endTime } = req.query;
+      const { startTime, endTime, programId } = req.query;
       const query = {};
 
       if (startTime) {
@@ -19,6 +19,14 @@ router
 
       if (endTime) {
         query.endTime = { $lte: endTime };
+      }
+
+      if (programId) {
+        if (!mongoose.Types.ObjectId.isValid(programId)) {
+          throw error(400, "Invalid program ID");
+        }
+
+        query.programId = programId;
       }
 
       res.json({ shifts: await Shift.find(query).limit(1000) });
