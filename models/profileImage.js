@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const model = mongoose.model;
 
 const ProfileImage = model(
-  "ProfileImage",
+  "Profile_Image",
   new Schema(
     {
       data: Buffer,
